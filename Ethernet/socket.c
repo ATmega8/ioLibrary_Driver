@@ -496,6 +496,7 @@ int32_t sendto(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16_t
    switch(getSn_MR(sn) & 0x0F)
    {
       case Sn_MR_UDP:
+//A170105 #if about W5500
 #if _WIZCHIP_ != 5500
       case Sn_MR_IPRAW:
 #endif
@@ -519,6 +520,8 @@ int32_t sendto(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16_t
    if((taddr == 0)&(getSn_MR(sn)&Sn_MR_MACRAW != Sn_MR_MACRAW)) return SOCKERR_IPINVALID;
    if((port  == 0)&(getSn_MR(sn)&Sn_MR_MACRAW != Sn_MR_MACRAW)) return SOCKERR_PORTZERO;
    tmp = getSn_SR(sn);
+   
+//A170105 #if about W5500
 #if _WIZCHIP_ == 5500
    if(tmp != SOCK_MACRAW && tmp != SOCK_UDP) return SOCKERR_SOCKSTATUS;
 #else
