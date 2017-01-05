@@ -496,7 +496,9 @@ int32_t sendto(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16_t
    switch(getSn_MR(sn) & 0x0F)
    {
       case Sn_MR_UDP:
+#if _WIZCHIP_ != 5500
       case Sn_MR_IPRAW:
+#endif
       case Sn_MR_MACRAW:
          break;
       default:
@@ -517,8 +519,11 @@ int32_t sendto(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16_t
    if((taddr == 0)&(getSn_MR(sn)&Sn_MR_MACRAW != Sn_MR_MACRAW)) return SOCKERR_IPINVALID;
    if((port  == 0)&(getSn_MR(sn)&Sn_MR_MACRAW != Sn_MR_MACRAW)) return SOCKERR_PORTZERO;
    tmp = getSn_SR(sn);
+#if _WIZCHIP_ == 5500
+   if(tmp != SOCK_MACRAW && tmp != SOCK_UDP) return SOCKERR_SOCKSTATUS;
+#else
    if(tmp != SOCK_MACRAW && tmp != SOCK_UDP && tmp != SOCK_IPRAW) return SOCKERR_SOCKSTATUS;
-      
+#endif      
    setSn_DIPR(sn,addr);
    setSn_DPORT(sn,port);      
    freesize = getSn_TxMAX(sn);
