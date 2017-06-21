@@ -276,6 +276,8 @@ int8_t connect(uint8_t sn, uint8_t * addr, uint16_t port)
 	setSn_CR(sn,Sn_CR_CONNECT);
    while(getSn_CR(sn));
    if(sock_io_mode & (1<<sn)) return SOCK_BUSY;
+
+   /* Use Interrupt 
    while(getSn_SR(sn) != SOCK_ESTABLISHED)
    {
 		if (getSn_IR(sn) & Sn_IR_TIMEOUT)
@@ -288,7 +290,7 @@ int8_t connect(uint8_t sn, uint8_t * addr, uint16_t port)
 		{
 			return SOCKERR_SOCKCLOSED;
 		}
-	}
+	}*/
    
    return SOCK_OK;
 }
@@ -517,8 +519,8 @@ int32_t sendto(uint8_t sn, uint8_t * buf, uint16_t len, uint8_t * addr, uint16_t
    //}
    //
    //if(*((uint32_t*)addr) == 0) return SOCKERR_IPINVALID;
-   if((taddr == 0)&(getSn_MR(sn)&Sn_MR_MACRAW != Sn_MR_MACRAW)) return SOCKERR_IPINVALID;
-   if((port  == 0)&(getSn_MR(sn)&Sn_MR_MACRAW != Sn_MR_MACRAW)) return SOCKERR_PORTZERO;
+   if((taddr == 0)&&((getSn_MR(sn)&Sn_MR_MACRAW) != Sn_MR_MACRAW)) return SOCKERR_IPINVALID;
+   if((port  == 0)&&((getSn_MR(sn)&Sn_MR_MACRAW) != Sn_MR_MACRAW)) return SOCKERR_PORTZERO;
    tmp = getSn_SR(sn);
    
 //A170105 #if about W5500
